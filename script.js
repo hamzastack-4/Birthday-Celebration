@@ -30,6 +30,29 @@ function playMusic() {
 window.addEventListener('DOMContentLoaded', function() {
   playMusic();
 });
+
+// Pause music when user leaves the page
+document.addEventListener('visibilitychange', function() {
+  const music = document.getElementById('background-music');
+  if (document.hidden) {
+    music.pause();
+  } else {
+    music.play();
+  }
+});
+
+// Pause music when user switches tab or minimizes window
+window.addEventListener('blur', function() {
+  const music = document.getElementById('background-music');
+  music.pause();
+});
+
+// Resume music when user returns to the page
+window.addEventListener('focus', function() {
+  const music = document.getElementById('background-music');
+  music.play();
+});
+
 const content = document.getElementById('content');
 const footer = document.getElementsByTagName('footer')[0];
 const timer = document.getElementById('timer');
@@ -177,6 +200,13 @@ new TypeIt("#teks1", {
 
 new TypeIt("#teks2", {
   strings: ["On your special day, I wish you all the happiness in the world.", "May every dream you chase turn into reality.", "May success follow you in every step you take.", "May your life be filled with love, laughter, and endless joy.", "May God bless you with health, prosperity, and peace.", "Happy Birthday! Here's to another amazing year ahead!"],
+  startDelay: 2000,
+  speed: 75,
+  waitUntilVisible: true
+}).go();
+
+new TypeIt("#teks3", {
+  strings: ["Happy Birthday meri ullu, meri khushi, meri bestie. 🎉💕"],
   startDelay: 2000,
   speed: 75,
   waitUntilVisible: true
