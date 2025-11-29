@@ -179,15 +179,9 @@ const _slideLima = function () {
       trims.remove();
       setTimeout(() => {
         slideLima.remove();
-        _slideEnam();
       }, 1000);
     }, 6000);
   });
-};
-
-const _slideEnam = function () {
-  const slideEnam = document.getElementById('slideEnam');
-  slideEnam.classList.remove('d-none');
 };
 
 
@@ -199,14 +193,7 @@ new TypeIt("#teks1", {
 }).go();
 
 new TypeIt("#teks2", {
-  strings: ["On your special day, I wish you all the happiness in the world.", "May every dream you chase turn into reality.", "May success follow you in every step you take.", "May your life be filled with love, laughter, and endless joy.", "May God bless you with health, prosperity, and peace.", "Happy Birthday! Here's to another amazing year ahead!"],
-  startDelay: 2000,
-  speed: 75,
-  waitUntilVisible: true
-}).go();
-
-new TypeIt("#teks3", {
-  strings: ["Happy Birthday meri ullu, meri khushi, meri bestie. 🎉💕"],
+  strings: ["On your special day, I wish you all the happiness in the world.", "May every dream you chase turn into reality.", "May success follow you in every step you take.", "May your life be filled with love, laughter, and endless joy.", "May God bless you with health, prosperity, and peace.", "Happy Birthday! Here's to another amazing year ahead!", "Happy Birthday meri ullu, meri khushi, meri bestie. 🎉💕"],
   startDelay: 2000,
   speed: 75,
   waitUntilVisible: true
