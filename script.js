@@ -1,12 +1,35 @@
 // Fungsi untuk memulai musik
 function playMusic() {
   const music = document.getElementById('background-music');
-  music.play();
+  const playPromise = music.play();
+
+  if (playPromise !== undefined) {
+    playPromise.catch(() => {
+      // If autoplay is blocked, show a message to prompt user interaction
+      const prompt = document.createElement('div');
+      prompt.innerText = 'Click anywhere to play music';
+      prompt.style.position = 'fixed';
+      prompt.style.top = '50%';
+      prompt.style.left = '50%';
+      prompt.style.transform = 'translate(-50%, -50%)';
+      prompt.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+      prompt.style.color = 'white';
+      prompt.style.padding = '20px';
+      prompt.style.borderRadius = '10px';
+      prompt.style.zIndex = '1000';
+      document.body.appendChild(prompt);
+
+      document.body.addEventListener('click', () => {
+        music.play();
+        document.body.removeChild(prompt);
+      }, { once: true });
+    });
+  }
 }
+
 window.addEventListener('DOMContentLoaded', function() {
   playMusic();
 });
-document.body.addEventListener('click', playMusic, { once: true });
 const content = document.getElementById('content');
 const footer = document.getElementsByTagName('footer')[0];
 const timer = document.getElementById('timer');
@@ -15,7 +38,7 @@ const second = 1000,
   minute = second * 60,
   hour = minute * 60,
   day = hour * 24;
-let countDown = new Date('Oct 22, 2023 00:00:00').getTime(),
+let countDown = new Date().getTime() + (5 * second),
   x = setInterval(function () {
     let now = new Date().getTime(),
       distance = countDown - now;
@@ -61,17 +84,13 @@ const _slideDua = function () {
 
   slideDua.classList.remove('d-none');
   setTimeout(function () {
-    tap.classList.remove('d-none');
-    document.body.addEventListener('click', function () {
-      slideDua.classList.replace('animate__zoomInDown', 'animate__fadeOutLeft');
-      slideDua.classList.remove('animate__delay-2s', 'animate__slow');
-      tap.classList.add('d-none');
-      setTimeout(function () {
-        slideDua.remove();
-        _slideTiga();
-      }, 1000);
-    })
-  }, 40000);
+    slideDua.classList.replace('animate__zoomInDown', 'animate__fadeOutLeft');
+    slideDua.classList.remove('animate__delay-2s', 'animate__slow');
+    setTimeout(function () {
+      slideDua.remove();
+      _slideTiga();
+    }, 1000);
+  }, 38000);
 };
 
 const _slideTiga = function () {
@@ -80,17 +99,13 @@ const _slideTiga = function () {
 
   slideTiga.classList.remove('d-none');
   setTimeout(function () {
-    tap.classList.remove('d-none');
-    document.body.addEventListener('click', function () {
-      slideTiga.classList.remove('animate__delay-2s', 'animate__slow');
-      slideTiga.classList.replace('animate__fadeInRight', 'animate__fadeOut');
-      tap.remove();
-      setTimeout(function () {
-        slideTiga.remove();
-        _slideEmpat();
-      }, 1000);
-    })
-  }, 43000);
+    slideTiga.classList.remove('animate__delay-2s', 'animate__slow');
+    slideTiga.classList.replace('animate__fadeInRight', 'animate__fadeOut');
+    setTimeout(function () {
+      slideTiga.remove();
+      _slideEmpat();
+    }, 1000);
+  }, 41000);
 }
 
 function getRandomPosition(element) {
@@ -154,14 +169,14 @@ const _slideEnam = function () {
 
 
 new TypeIt("#teks1", {
-  strings: ["Hari ini, saya langitkan semua doa terbaik saya untuk kamu.", "Semoga hal-hal yang membuat kamu runtuh turut menjadi alasan kamu untuk tetap tumbuh.", "Semoga dunia senantiasa menjaga kamu dimanapun kamu berada.", "Semoga hari-hari kamu selalu diiringi cinta yang tak pernah ada batasnya." , "Semoga setiap langkahmu dimudahkan hingga tercapai apa yang kamu inginkan."],
+  strings: ["Looking back at all the moments we've shared together...", "Every laugh, every conversation, every memory we created.", "The times when we supported each other through ups and downs.", "All those little moments that meant so much.", "Thank you for being a part of my journey.", "These memories will always hold a special place in my heart."],
   startDelay: 4000,
   speed: 75,
   waitUntilVisible: true
 }).go();
 
 new TypeIt("#teks2", {
-  strings: ["Dengan ataupun tanpaku, semoga semesta selalu membahagiakan kamu bagimanapun caranya.", " ", "barakallah fi umrik, terima kasih sudah bertahan sampai sejauh ini.", " ", "- Wish all you the best"],
+  strings: ["On your special day, I wish you all the happiness in the world.", "May every dream you chase turn into reality.", "May success follow you in every step you take.", "May your life be filled with love, laughter, and endless joy.", "May God bless you with health, prosperity, and peace.", "Happy Birthday! Here's to another amazing year ahead!"],
   startDelay: 2000,
   speed: 75,
   waitUntilVisible: true
@@ -169,9 +184,9 @@ new TypeIt("#teks2", {
 
 
 new TypeIt("#trims", {
-  strings: ["Terimakasih."],
+  strings: ["Thank you for being you.", "Have an amazing birthday! 🎉"],
   startDelay: 2000,
-  speed: 150,
+  speed: 100,
   loop: false,
   waitUntilVisible: true,
 }).go();

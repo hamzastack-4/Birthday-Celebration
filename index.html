@@ -17,7 +17,7 @@
 </head>
 
 <body>
-  <audio id="background-music" src="./music/monokrom.mp3" preload="auto">
+  <audio id="background-music" src="./music/MeloMance - Love, Maybe (Lyrics).mp3" preload="auto">
   </audio>
 
   <div class="bg" id="content">
@@ -25,7 +25,7 @@
     <div class="container" id="timer">
       <h5>Countdown to <x id='name'></x> birthday :</h5>
       <ul>
-        <li><span id="days"></span>days</li>
+        <li><span id="days"></span>Days</li>
         <li><span id="hours"></span>Hours</li>
         <li><span id="minutes"></span>Minutes</li>
         <li><span id="seconds"></span>Seconds</li>
@@ -52,15 +52,15 @@
     <div class="kotak d-none slides animate__animated animate__fadeInDown animate__delay-2s" id="slideEmpat">
       <div class="row">
         <div class="col-sm mt-1">
-          <h5>Kamu suka nggak?</h5>
+          <h5>Do you like it?</h5>
         </div>
       </div>
       <div class="row mt-2">
         <div class="col-4 offset-2">
-          <button id="gak" class="btn btn-outline-danger"> Gak! </button>
+          <button id="gak" class="btn btn-outline-danger"> No! </button>
         </div>
         <div class="col-4">
-          <button id="suka" class="btn btn-outline-info"> Suka!! </button>
+          <button id="suka" class="btn btn-outline-info"> Yes!! </button>
         </div>
       </div>
     </div>
@@ -70,8 +70,13 @@
     </div>
     <p id="trims" class="text-muted d-none mt-2"></p>
 
-    <p id="tap" class="d-none animate__animated animate__pulse text-muted animate__slow animate__repeat-3">Ketuk untuk
-      melanjutkan</p>
+    <div id="slideEnam" class="d-none"> 
+      <h1 class="animate__animated animate__fadeIn">🎉 Happy Birthday! 🎉</h1>
+      <p class="animate__animated animate__fadeIn animate__delay-1s">Wishing you all the best on your special day!</p>
+    </div>
+
+    <p id="tap" class="d-none animate__animated animate__pulse text-muted animate__slow animate__repeat-3">Tap to
+      continue</p>
     <!-- Footer -->
     <footer class="page-footer font-small blue fixed-bottom">
   <!-- Optional JavaScript -->
