@@ -179,3 +179,10 @@ body {
   padding: 0;
   text-align: center;
 }
+
+/* Mobile responsive styling for click prompt */
+@media (max-width: 768px) {
+  .paper-content .teks {
+    font-size: 16px;
+  }
+}

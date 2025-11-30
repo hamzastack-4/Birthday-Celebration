@@ -1,56 +1,35 @@
-// Fungsi untuk memulai musik
-function playMusic() {
-  const music = document.getElementById('background-music');
-  const playPromise = music.play();
-
-  if (playPromise !== undefined) {
-    playPromise.catch(() => {
-      // If autoplay is blocked, show a message to prompt user interaction
-      const prompt = document.createElement('div');
-      prompt.innerText = 'Click anywhere to play music';
-      prompt.style.position = 'fixed';
-      prompt.style.top = '50%';
-      prompt.style.left = '50%';
-      prompt.style.transform = 'translate(-50%, -50%)';
-      prompt.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-      prompt.style.color = 'white';
-      prompt.style.padding = '20px';
-      prompt.style.borderRadius = '10px';
-      prompt.style.zIndex = '1000';
-      document.body.appendChild(prompt);
-
-      document.body.addEventListener('click', () => {
-        music.play();
-        document.body.removeChild(prompt);
-      }, { once: true });
-    });
-  }
-}
-
+// No music during countdown
 window.addEventListener('DOMContentLoaded', function() {
-  playMusic();
+  // Countdown starts silently
 });
 
 // Pause music when user leaves the page
 document.addEventListener('visibilitychange', function() {
-  const music = document.getElementById('background-music');
+  const clappingSound = document.getElementById('clapping-sound');
+  const wishesMusic = document.getElementById('wishes-music');
   if (document.hidden) {
-    music.pause();
+    clappingSound.pause();
+    wishesMusic.pause();
   } else {
-    music.play();
+    if (!clappingSound.paused && clappingSound.currentTime > 0) clappingSound.play();
+    if (!wishesMusic.paused && wishesMusic.currentTime > 0) wishesMusic.play();
   }
 });
 
 // Pause music when user switches tab or minimizes window
 window.addEventListener('blur', function() {
-  const music = document.getElementById('background-music');
-  music.pause();
+  const clappingSound = document.getElementById('clapping-sound');
+  const wishesMusic = document.getElementById('wishes-music');
+  clappingSound.pause();
+  wishesMusic.pause();
 });
 
 // Resume music when user returns to the page
 window.addEventListener('focus', function() {
-  const music = document.getElementById('background-music');
-  music.play();
+  const clappingSound = document.getElementById('clapping-sound');
+  const wishesMusic = document.getElementById('wishes-music');
+  if (clappingSound.currentTime > 0 && wishesMusic.currentTime === 0) clappingSound.play();
+  if (wishesMusic.currentTime > 0) wishesMusic.play();
 });
 
 const content = document.getElementById('content');
@@ -61,12 +40,14 @@ const second = 1000,
   minute = second * 60,
   hour = minute * 60,
   day = hour * 24;
-let countDown = new Date().getTime() + (5 * second),
+
+// Set countdown to December 1, 2025
+let countDown = new Date('December 1, 2025 00:00:00').getTime(),
   x = setInterval(function () {
     let now = new Date().getTime(),
       distance = countDown - now;
-    // document.getElementById('days').innerText = Math.floor(distance / (day)),
-    document.getElementById('hours').innerText = Math.floor(distance / (hour)),
+    document.getElementById('days').innerText = Math.floor(distance / (day)),
+    document.getElementById('hours').innerText = Math.floor((distance % (day)) / (hour)),
       document.getElementById('minutes').innerText = Math.floor((distance % (hour)) / (minute)),
       document.getElementById('seconds').innerText = Math.floor((distance % (minute)) / second);
 
@@ -75,6 +56,40 @@ let countDown = new Date().getTime() + (5 * second),
       timer.classList.add('d-none');
       confetti();
       clearInterval(x);
+      
+      // Play clapping sound with autoplay fallback
+      const clappingSound = document.getElementById('clapping-sound');
+      const playPromise = clappingSound.play();
+      
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // If autoplay is blocked, show a message to prompt user interaction
+          const prompt = document.createElement('div');
+          prompt.innerHTML = '<i class="fas fa-hand-pointer"></i> Click anywhere to start';
+          prompt.style.position = 'fixed';
+          prompt.style.top = '50%';
+          prompt.style.left = '50%';
+          prompt.style.transform = 'translate(-50%, -50%)';
+          prompt.style.backgroundColor = 'rgba(0, 0, 0, 0.85)';
+          prompt.style.color = 'white';
+          prompt.style.padding = '20px 30px';
+          prompt.style.borderRadius = '15px';
+          prompt.style.fontSize = '16px';
+          prompt.style.fontWeight = '500';
+          prompt.style.zIndex = '10000';
+          prompt.style.cursor = 'pointer';
+          prompt.style.boxShadow = '0 8px 16px rgba(0,0,0,0.3)';
+          prompt.style.textAlign = 'center';
+          prompt.style.maxWidth = '80%';
+          document.body.appendChild(prompt);
+
+          document.body.addEventListener('click', () => {
+            clappingSound.play();
+            document.body.removeChild(prompt);
+          }, { once: true });
+        });
+      }
+      
       _slideSatu();
     }
 
@@ -96,6 +111,78 @@ const _slideDua = function () {
   const slideSatu = document.getElementById('slideSatu');
   const tap = document.getElementById('tap');
   const slideDua = document.getElementById('slideDua');
+
+  // Fade out clapping and fade in wishes music when wishes start
+  const clappingSound = document.getElementById('clapping-sound');
+  const wishesMusic = document.getElementById('wishes-music');
+  
+  // Fade out clapping
+  let clappingVolume = 1;
+  const fadeOutClapping = setInterval(() => {
+    if (clappingVolume > 0) {
+      clappingVolume -= 0.1;
+      clappingSound.volume = Math.max(0, clappingVolume);
+    } else {
+      clearInterval(fadeOutClapping);
+      clappingSound.pause();
+      clappingSound.volume = 1;
+    }
+  }, 100);
+  
+  // Fade in wishes music with autoplay fallback
+  wishesMusic.volume = 0;
+  const playPromise = wishesMusic.play();
+  
+  if (playPromise !== undefined) {
+    playPromise.then(() => {
+      // Successfully started, fade in
+      let wishesVolume = 0;
+      const fadeInWishes = setInterval(() => {
+        if (wishesVolume < 1) {
+          wishesVolume += 0.05;
+          wishesMusic.volume = Math.min(1, wishesVolume);
+        } else {
+          clearInterval(fadeInWishes);
+        }
+      }, 100);
+    }).catch(() => {
+      // If autoplay is blocked, show prompt
+      const prompt = document.createElement('div');
+      prompt.innerHTML = '<i class="fas fa-music"></i> Click to continue with music';
+      prompt.style.position = 'fixed';
+      prompt.style.top = '50%';
+      prompt.style.left = '50%';
+      prompt.style.transform = 'translate(-50%, -50%)';
+      prompt.style.backgroundColor = 'rgba(0, 0, 0, 0.85)';
+      prompt.style.color = 'white';
+      prompt.style.padding = '20px 30px';
+      prompt.style.borderRadius = '15px';
+      prompt.style.fontSize = '16px';
+      prompt.style.fontWeight = '500';
+      prompt.style.zIndex = '10000';
+      prompt.style.cursor = 'pointer';
+      prompt.style.boxShadow = '0 8px 16px rgba(0,0,0,0.3)';
+      prompt.style.textAlign = 'center';
+      prompt.style.maxWidth = '80%';
+      document.body.appendChild(prompt);
+
+      document.body.addEventListener('click', () => {
+        wishesMusic.play().then(() => {
+          let wishesVolume = 0;
+          wishesMusic.volume = 0;
+          const fadeInWishes = setInterval(() => {
+            if (wishesVolume < 1) {
+              wishesVolume += 0.05;
+              wishesMusic.volume = Math.min(1, wishesVolume);
+            } else {
+              clearInterval(fadeInWishes);
+            }
+          }, 100);
+        });
+        document.body.removeChild(prompt);
+      }, { once: true });
+    });
+  }
 
   setTimeout(function () {
     slideSatu.classList.replace('animate__slideInDown', 'animate__backOutDown');
@@ -193,15 +280,16 @@ new TypeIt("#teks1", {
 }).go();
 
 new TypeIt("#teks2", {
-  strings: ["On your special day, I wish you all the happiness in the world.", "May every dream you chase turn into reality.", "May success follow you in every step you take.", "May your life be filled with love, laughter, and endless joy.", "May God bless you with health, prosperity, and peace.", "Happy Birthday! Here's to another amazing year ahead!", "Happy Birthday meri ullu, meri khushi, meri bestie. 🎉💕"],
+  strings: ["On your special day, I wish you all the happiness in the world.", "May every dream you chase turn into reality.", "May success follow you in every step you take.", "May God bless you with health, prosperity, and peace.", "Happy Birthday! Here's to another amazing year ahead!", "Happy Birthday Meri Ullu, Meri Khushi, Meri Bestie.", "Bye Bye Beautiful Hareem !"],
   startDelay: 2000,
   speed: 75,
-  waitUntilVisible: true
+  waitUntilVisible: true,
+  breakLines: true
 }).go();
 
 
 new TypeIt("#trims", {
-  strings: ["Thank you for being you.", "Have an amazing birthday! 🎉"],
+  strings: ["Thank you for being you."],
   startDelay: 2000,
   speed: 100,
   loop: false,
